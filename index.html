@@ -46,14 +46,13 @@
         #s-image-container { width: 100%; height: 260px; background: #000; border: 1px solid #333; margin-bottom: 20px; display: none; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px; }
         #s-image-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* KAYNAK VE DOĞRULAMA ALANI */
+        /* KAYNAK ALANI */
         .source-container { margin-top: 30px; padding: 18px; background: rgba(255, 0, 0, 0.05); border-radius: 4px; border: 1px solid #333; border-top: 2px solid #ff0000; margin-bottom: 60px; }
         .source-label { color: #ff0000; font-weight: 900; font-size: 11px; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 1px; }
         .verification-text { color: #bbb; font-size: 12.5px; font-style: italic; line-height: 1.6; }
         .source-btn { display: inline-block; width: 100%; padding: 12px; background: #ff0000; color: #fff; text-align: center; text-decoration: none; font-weight: 900; font-size: 12px; border-radius: 4px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(255,0,0,0.3); }
         .source-btn:hover { background: #cc0000; transform: translateY(-2px); }
 
-        /* KÜMELEME */
         .marker-cluster div { background-color: rgba(255, 0, 0, 0.85); color: #fff; font-weight: bold; }
         .marker-cluster { background-color: rgba(255, 0, 0, 0.15); }
 
@@ -103,14 +102,13 @@
     <script>
         let map, clusterGroup, currentLang = 'tr', lastSelectedData = null;
 
-        // MANİFESTO - 3 DİLDE EKSİKSİZ TAM METİN
         const translations = {
             tr: {
                 quote: `"Yurtta Sulh, Cihanda Sulh."`,
                 sub: `— Mustafa Kemal Atatürk`,
                 text: `Bizler, <strong>Timor Niyazi</strong> ve <strong>Alfred Böhler</strong>, insanlığın en karanlık döngüsüne tanıklık ediyoruz. İkinci Dünya Savaşı'nda katledilen milyonlardan sonra dünyanın ders aldığı illüzyonu, tarihin en trajik yanılgısıdır. Eğer insanlık Birinci Dünya Savaşı'nın dehşetini gerçekten anlasaydı, ikincisi asla gerçekleşmezdi. Oysa açgözlülük, bitmek bilmeyen petrol hırsı ve mutlak hegemonya arayışı, insan hayatını sadece istatistiklere indirgedi.<br><br>Medya bile ölen insanların haberlerine 3 dakikadan fazla zaman ayırmıyor ve medyalar bize savaşların ve insanların ölümlerini tam anlamıyla bilmemize izin vermiyorlar. Tam olarak bu yüzden bu site kuruldu. İnsanlarımız, özellikle genç insanlar savaşlardan bihaber; tam bunlara bir dikkat çekmek istiyoruz. Sadece aktif savaşlar değil, 1945'ten 2026'ya kadar olan savaşlar ve gerçekleriyle bu sitede.`,
                 res_label: "DOĞRULAMA VE KAYNAKÇA:",
-                verify_msg: "Bu vaka; Cenevre Sözleşmesi Arşivleri (ICRC), BM İnsan Hakları (OHCHR) raporları ve bağımsız saha araştırmalarıyla doğrulanmıştır.",
+                verify_msg: "Bu vaka; Cenevre Sözleşmesi Arşivleri (ICRC), BM İnsan Hakları raporları ve bağımsız saha araştırmalarıyla doğrulanmıştır.",
                 btn_source: "ARŞİVİ GÖR / VIEW ARCHIVE"
             },
             en: {
@@ -118,7 +116,7 @@
                 sub: `— Mustafa Kemal Atatürk`,
                 text: `We, <strong>Timor Niyazi</strong> and <strong>Alfred Böhler</strong>, bear witness to humanity's darkest loop. The illusion that the world learned its lesson after WWII is history's most tragic fallacy. If humanity had truly understood the horror of WWI, WWII would never have occurred. Greedy hunger for oil and absolute hegemony have reduced human life to mere statistics.<br><br>Today, even the media doesn't dedicate more than 3 minutes to the news of dying people. They do not allow us to fully comprehend the true scale of wars and deaths. This is exactly why this site was founded. Our people, especially the youth, are unaware of these wars; we want to draw attention to exactly this. Not only active conflicts, but the wars from 1945 to 2026 and their raw realities are on this site.`,
                 res_label: "VERIFICATION & BIBLIOGRAPHY:",
-                verify_msg: "This case has been verified through Geneva Convention Archives (ICRC), UN Human Rights Office (OHCHR) reports, and independent field investigations.",
+                verify_msg: "This case has been verified through Geneva Convention Archives (ICRC), UN Human Rights reports, and independent field investigations.",
                 btn_source: "VIEW ARCHIVE"
             },
             de: {
@@ -126,7 +124,7 @@
                 sub: `— Mustafa Kemal Atatürk`,
                 text: `Wir, <strong>Timor Niyazi</strong> und <strong>Alfred Böhler</strong>, bezeugen den dunkelsten Kreislauf der Menschheit. Die Illusion, die Welt habe nach dem Zweiten Weltkrieg gelernt, ist der tragischste Irrtum der Geschichte. Hätte die Menschheit den Schrecken des Ersten Weltkriegs wirklich verstanden, hätte der zweite niemals stattgefunden. Gier, der Hunger nach Öl und das Streben nach Hegemonie haben Menschenleben zu Statistiken degradiert.<br><br>Heute widmen selbst die Medien den Nachrichten über sterbende Menschen nicht mehr als 3 Minuten. Sie erlauben uns nicht, das wahre Ausmaß von Kriegen und Todesfällen vollständig zu begreifen. Genau aus diesem Grund wurde diese Seite gegründet. Unsere Mitmenschen, besonders die jüngere Generation, sind sich der Kriege nicht bewusst; genau darauf wollen wir aufmerksam machen. Nicht nur aktive Konflikte, sondern alle Kriege von 1945 bis 2026 und ihre ungeschönten Realitäten finden sich auf dieser Seite.`,
                 res_label: "VERIFIZIERUNG & BIBLIOGRAPHIE:",
-                verify_msg: "Dieser Fall wurde durch das Archiv der Genfer Konvention (IKRK), Berichte des UN-Menschenrechtsbüros (OHCHR) und unabhängige Feldforschungen verifiziert.",
+                verify_msg: "Dieser Fall wurde durch das Archiv der Genfer Konvention (IKRK), Berichte der UN-Menschenrechtsorganisationen und unabhängige Feldforschungen verifiziert.",
                 btn_source: "ARCHIV ANSEHEN"
             }
         };
@@ -140,17 +138,14 @@
             document.getElementById('m-sub').innerText = translations[lang].sub;
             document.getElementById('m-text').innerHTML = translations[lang].text;
             
-            // Eğer bir nokta açıksa ve dil değişirse içeriği de güncelle
-            if(lastSelectedData) {
-                updateSidebar(lastSelectedData);
-            }
+            if(lastSelectedData) updateSidebar(lastSelectedData);
         }
 
         function updateSidebar(item) {
             lastSelectedData = item;
             
-            // HATA KORUMASI (Zırhlı Yedekleme): Bir dilde başlık yoksa İngilizceye, o da yoksa Türkçeye dön. ÇÖKMEYİ ENGELLER.
-            const safeName = item.name[currentLang] || item.name['en'] || item.name['tr'] || "Bilinmeyen Arşiv";
+            // DİL SEÇİMİ VE YEDEKLEME (FALLBACK) SİSTEMİ
+            const safeName = item.name[currentLang] || item.name['en'] || item.name['tr'] || "Unknown Archive";
             document.getElementById('s-title').innerText = safeName;
             document.getElementById('s-date').innerText = "YEAR: " + item.start;
             
@@ -158,33 +153,33 @@
             if (item.q10_img) {
                 imgBox.style.display = 'flex';
                 document.getElementById('s-image').src = item.q10_img;
-            } else { 
-                imgBox.style.display = 'none'; 
-            }
+            } else { imgBox.style.display = 'none'; }
             
-            // HATA KORUMASI: JSON'da detay veya tahmin o dilde girilmemişse, kodun çökmemesi için diğer dilleri kontrol eder.
+            // Verinin Almancası yoksa İngilizceye, o da yoksa Türkçeye bakar
             const details = item.details[currentLang] || item.details['en'] || item.details['tr'] || {};
-            const aiPred = item.ai_prediction ? (item.ai_prediction[currentLang] || item.ai_prediction['en'] || item.ai_prediction['tr'] || "") : "";
+            const prediction = item.ai_prediction ? (item.ai_prediction[currentLang] || item.ai_prediction['en'] || item.ai_prediction['tr'] || "") : "";
             
             let dHtml = "";
-            if (aiPred !== "") {
-                dHtml += `<div style="background:rgba(255,0,0,0.15); padding:15px; border-left:4px solid #ff0000; margin-bottom:20px; font-size:12.5px; color:#ffcccc; font-style:italic;"><strong>PROJECTION:</strong> ${aiPred}</div>`;
+            if (prediction !== "") {
+                dHtml += `<div style="background:rgba(255,0,0,0.15); padding:15px; border-left:4px solid #ff0000; margin-bottom:20px; font-size:12.5px; color:#ffcccc; font-style:italic;"><strong>PROJECTION:</strong> ${prediction}</div>`;
             }
             
+            // Maddeleri döngüyle basar (En az bir dilde veri varsa gösterir)
             for (let i = 1; i <= 9; i++) {
-                if(details[`q${i}_title`]) {
-                    dHtml += `<div style="margin-bottom:18px;"><strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; display:block; padding-bottom:3px;">${details[`q${i}_title`]}</strong><p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${details[`q${i}_text`]}</p></div>`;
+                const title = details[`q${i}_title`];
+                const text = details[`q${i}_text`];
+                if(title) {
+                    dHtml += `<div style="margin-bottom:18px;"><strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; display:block; padding-bottom:3px;">${title}</strong><p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${text}</p></div>`;
                 }
             }
             document.getElementById('s-details').innerHTML = dHtml;
 
-            // Kaynak Alanı Güncellemesi (Link kontrolü hem 'source_link' hem 'q10_link' için yapıldı)
+            // Kaynak Alanı
             document.getElementById('s-res-label').innerText = translations[currentLang].res_label;
             let resHtml = `<p class="verification-text">${translations[currentLang].verify_msg}</p>`;
-            
-            let theLink = item.source_link || item.q10_link || "";
-            if(theLink.includes('http')) {
-                resHtml += `<a href="${theLink}" target="_blank" class="source-btn">${translations[currentLang].btn_source}</a>`;
+            let targetLink = item.source_link || item.q10_link || "";
+            if(targetLink.includes('http')) {
+                resHtml += `<a href="${targetLink}" target="_blank" class="source-btn">${translations[currentLang].btn_source}</a>`;
             }
             document.getElementById('s-resources').innerHTML = resHtml;
 
@@ -210,7 +205,7 @@
                     });
                     map.addLayer(clusterGroup);
                 })
-                .catch(err => console.error("Archive Data Load Error:", err));
+                .catch(err => console.error("JSON Hatası:", err));
 
             changeLang('tr');
             map.on('click', (e) => { 
