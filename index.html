@@ -53,7 +53,6 @@
         .source-btn { display: inline-block; width: 100%; padding: 12px; background: #ff0000; color: #fff; text-align: center; text-decoration: none; font-weight: 900; font-size: 12px; border-radius: 4px; transition: 0.3s; margin-top: 15px; text-transform: uppercase; border: none; cursor: pointer; box-shadow: 0 4px 10px rgba(255,0,0,0.3); }
         .source-btn:hover { background: #cc0000; transform: translateY(-2px); }
 
-        /* CLUSTER STİLLERİ */
         .marker-cluster div { background-color: rgba(255, 0, 0, 0.85); color: #fff; font-weight: bold; }
         .marker-cluster { background-color: rgba(255, 0, 0, 0.15); }
 
@@ -174,11 +173,11 @@
                             ${translations[currentLang].missing}
                          </div>`;
             } else {
-                for (let i = 1; i <= 9; i++) {
+                for (let i = 1; i <= 10; i++) {
                     const title = details[`q${i}_title`];
                     const text = details[`q${i}_text`];
                     if(title) {
-                        dHtml += `<div style="margin-bottom:18px;"><strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; padding-bottom:3px;">${title}</strong><p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${text}</p></div>`;
+                        dHtml += `<div style="margin-bottom:18px;"><strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; display:block; padding-bottom:3px;">${title}</strong><p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${text}</p></div>`;
                     }
                 }
             }
