@@ -17,7 +17,41 @@
     },
     "source_link": "https://www.globalwitness.org/",
     "q10_img": "https://upload.wikimedia.org/wikipedia/commons/thumb/1/1b/Coltan_mine_in_the_Democratic_Republic_of_Congo.jpg/800px-Coltan_mine_in_the_Democratic_Republic_of_Congo.jpg",
-    "details": {
+    "details": {// updateSidebar fonksiyonu içindeki metin alma mantığını şu kodla değiştir:
+
+function updateSidebar(item) {
+    lastSelectedData = item;
+    
+    // Başlık kontrolü
+    const safeName = item.name[currentLang] || item.name['en'] || item.name['tr'];
+    document.getElementById('s-title').innerText = safeName;
+    
+    const details = item.details[currentLang]; // Sadece seçili dili al
+    
+    let dHtml = "";
+    
+    if (!details) {
+        // EĞER O DİLDE VERİ YOKSA REZİL OLMAMAK İÇİN BU UYARIYI GÖSTERİR
+        dHtml = `<div style="padding:20px; border:1px dashed #ff0000; color:#ff0000; font-size:14px; text-align:center;">
+                    <i class="fas fa-exclamation-triangle"></i><br><br>
+                    ${currentLang === 'de' ? 'Übersetzung für diesen Archivinhalt ist in Arbeit.' : 'Translation for this archive content is in progress.'}
+                 </div>`;
+    } else {
+        // Eğer veri varsa maddeleri bas
+        for (let i = 1; i <= 9; i++) {
+            const title = details[`q${i}_title`];
+            const text = details[`q${i}_text`];
+            if(title) {
+                dHtml += `<div style="margin-bottom:18px;">
+                            <strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; display:block; padding-bottom:3px;">${title}</strong>
+                            <p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${text}</p>
+                          </div>`;
+            }
+        }
+    }
+    document.getElementById('s-details').innerHTML = dHtml;
+    // ... geri kalan kodlar aynı ...
+}
       "en": {
         "q1_title": "1. OFFICIAL JUSTIFICATION VS. TRUE POWER",
         "q1_text": "Official: 'Ancient tribal uprisings and border disputes.' True Reality: A meticulously planned ethnic cleansing to secure unhindered access to Coltan and Cobalt for Western tech giants. The narrative of ethnic hatred is a convenient cover story masking an industrial-scale looting operation designed to fuel the global consumer electronics and electric vehicle markets.",
