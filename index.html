@@ -103,27 +103,31 @@
     <script>
         let map, clusterGroup, currentLang = 'tr', lastSelectedData = null;
 
+        // MANİFESTO - 3 DİLDE EKSİKSİZ TAM METİN
         const translations = {
             tr: {
                 quote: `"Yurtta Sulh, Cihanda Sulh."`,
                 sub: `— Mustafa Kemal Atatürk`,
                 text: `Bizler, <strong>Timor Niyazi</strong> ve <strong>Alfred Böhler</strong>, insanlığın en karanlık döngüsüne tanıklık ediyoruz. İkinci Dünya Savaşı'nda katledilen milyonlardan sonra dünyanın ders aldığı illüzyonu, tarihin en trajik yanılgısıdır. Eğer insanlık Birinci Dünya Savaşı'nın dehşetini gerçekten anlasaydı, ikincisi asla gerçekleşmezdi. Oysa açgözlülük, bitmek bilmeyen petrol hırsı ve mutlak hegemonya arayışı, insan hayatını sadece istatistiklere indirgedi.<br><br>Medya bile ölen insanların haberlerine 3 dakikadan fazla zaman ayırmıyor ve medyalar bize savaşların ve insanların ölümlerini tam anlamıyla bilmemize izin vermiyorlar. Tam olarak bu yüzden bu site kuruldu. İnsanlarımız, özellikle genç insanlar savaşlardan bihaber; tam bunlara bir dikkat çekmek istiyoruz. Sadece aktif savaşlar değil, 1945'ten 2026'ya kadar olan savaşlar ve gerçekleriyle bu sitede.`,
                 res_label: "DOĞRULAMA VE KAYNAKÇA:",
-                verify_msg: "Bu vaka; Cenevre Sözleşmesi Arşivleri (ICRC), BM İnsan Hakları Yüksek Komiserliği (OHCHR) raporları ve bağımsız saha araştırmalarıyla doğrulanmıştır."
+                verify_msg: "Bu vaka; Cenevre Sözleşmesi Arşivleri (ICRC), BM İnsan Hakları (OHCHR) raporları ve bağımsız saha araştırmalarıyla doğrulanmıştır.",
+                btn_source: "ARŞİVİ GÖR / VIEW ARCHIVE"
             },
             en: {
                 quote: `"Peace at Home, Peace in the World."`,
                 sub: `— Mustafa Kemal Atatürk`,
-                text: `We, <strong>Timor Niyazi</strong> and <strong>Alfred Böhler</strong>, bear witness to humanity's darkest loop. The illusion that the world learned its lesson after WWII is history's most tragic fallacy... Today, even the media doesn't dedicate more than 3 minutes to the news of dying people... This is exactly why this site was founded.`,
+                text: `We, <strong>Timor Niyazi</strong> and <strong>Alfred Böhler</strong>, bear witness to humanity's darkest loop. The illusion that the world learned its lesson after WWII is history's most tragic fallacy. If humanity had truly understood the horror of WWI, WWII would never have occurred. Greedy hunger for oil and absolute hegemony have reduced human life to mere statistics.<br><br>Today, even the media doesn't dedicate more than 3 minutes to the news of dying people. They do not allow us to fully comprehend the true scale of wars and deaths. This is exactly why this site was founded. Our people, especially the youth, are unaware of these wars; we want to draw attention to exactly this. Not only active conflicts, but the wars from 1945 to 2026 and their raw realities are on this site.`,
                 res_label: "VERIFICATION & BIBLIOGRAPHY:",
-                verify_msg: "This case has been verified through Geneva Convention Archives (ICRC), UN Human Rights Office (OHCHR) reports, and independent field investigations."
+                verify_msg: "This case has been verified through Geneva Convention Archives (ICRC), UN Human Rights Office (OHCHR) reports, and independent field investigations.",
+                btn_source: "VIEW ARCHIVE"
             },
             de: {
                 quote: `"Friede in der Heimat, Friede in der Welt."`,
                 sub: `— Mustafa Kemal Atatürk`,
-                text: `Wir, <strong>Timor Niyazi</strong> und <strong>Alfred Böhler</strong>, bezeugen den dunkelsten Kreislauf der Menschheit... Heute widmen selbst die Medien den Nachrichten über sterbende Menschen nicht mehr als 3 Minuten... Genau aus diesem Grund wurde diese Seite gegründet.`,
+                text: `Wir, <strong>Timor Niyazi</strong> und <strong>Alfred Böhler</strong>, bezeugen den dunkelsten Kreislauf der Menschheit. Die Illusion, die Welt habe nach dem Zweiten Weltkrieg gelernt, ist der tragischste Irrtum der Geschichte. Hätte die Menschheit den Schrecken des Ersten Weltkriegs wirklich verstanden, hätte der zweite niemals stattgefunden. Gier, der Hunger nach Öl und das Streben nach Hegemonie haben Menschenleben zu Statistiken degradiert.<br><br>Heute widmen selbst die Medien den Nachrichten über sterbende Menschen nicht mehr als 3 Minuten. Sie erlauben uns nicht, das wahre Ausmaß von Kriegen und Todesfällen vollständig zu begreifen. Genau aus diesem Grund wurde diese Seite gegründet. Unsere Mitmenschen, besonders die jüngere Generation, sind sich der Kriege nicht bewusst; genau darauf wollen wir aufmerksam machen. Nicht nur aktive Konflikte, sondern alle Kriege von 1945 bis 2026 und ihre ungeschönten Realitäten finden sich auf dieser Seite.`,
                 res_label: "VERIFIZIERUNG & BIBLIOGRAPHIE:",
-                verify_msg: "Dieser Fall wurde durch das Archiv der Genfer Konvention (IKRK), Berichte des UN-Hochkommissariats für Menschenrechte (OHCHR) und unabhängige Feldforschungen verifiziert."
+                verify_msg: "Dieser Fall wurde durch das Archiv der Genfer Konvention (IKRK), Berichte des UN-Menschenrechtsbüros (OHCHR) und unabhängige Feldforschungen verifiziert.",
+                btn_source: "ARCHIV ANSEHEN"
             }
         };
 
@@ -136,24 +140,36 @@
             document.getElementById('m-sub').innerText = translations[lang].sub;
             document.getElementById('m-text').innerHTML = translations[lang].text;
             
-            // Sidebar içeriğini güncelle
-            if(lastSelectedData) updateSidebar(lastSelectedData);
+            // Eğer bir nokta açıksa ve dil değişirse içeriği de güncelle
+            if(lastSelectedData) {
+                updateSidebar(lastSelectedData);
+            }
         }
 
         function updateSidebar(item) {
             lastSelectedData = item;
-            document.getElementById('s-title').innerText = item.name[currentLang] || item.name['en'];
+            
+            // HATA KORUMASI (Zırhlı Yedekleme): Bir dilde başlık yoksa İngilizceye, o da yoksa Türkçeye dön. ÇÖKMEYİ ENGELLER.
+            const safeName = item.name[currentLang] || item.name['en'] || item.name['tr'] || "Bilinmeyen Arşiv";
+            document.getElementById('s-title').innerText = safeName;
             document.getElementById('s-date').innerText = "YEAR: " + item.start;
             
             const imgBox = document.getElementById('s-image-container');
             if (item.q10_img) {
                 imgBox.style.display = 'flex';
                 document.getElementById('s-image').src = item.q10_img;
-            } else { imgBox.style.display = 'none'; }
+            } else { 
+                imgBox.style.display = 'none'; 
+            }
             
-            const details = item.details[currentLang] || item.details['en'];
-            const aiPred = item.ai_prediction[currentLang] || item.ai_prediction['en'];
-            let dHtml = `<div style="background:rgba(255,0,0,0.15); padding:15px; border-left:4px solid #ff0000; margin-bottom:20px; font-size:12.5px; color:#ffcccc; font-style:italic;"><strong>PROJECTION:</strong> ${aiPred}</div>`;
+            // HATA KORUMASI: JSON'da detay veya tahmin o dilde girilmemişse, kodun çökmemesi için diğer dilleri kontrol eder.
+            const details = item.details[currentLang] || item.details['en'] || item.details['tr'] || {};
+            const aiPred = item.ai_prediction ? (item.ai_prediction[currentLang] || item.ai_prediction['en'] || item.ai_prediction['tr'] || "") : "";
+            
+            let dHtml = "";
+            if (aiPred !== "") {
+                dHtml += `<div style="background:rgba(255,0,0,0.15); padding:15px; border-left:4px solid #ff0000; margin-bottom:20px; font-size:12.5px; color:#ffcccc; font-style:italic;"><strong>PROJECTION:</strong> ${aiPred}</div>`;
+            }
             
             for (let i = 1; i <= 9; i++) {
                 if(details[`q${i}_title`]) {
@@ -162,11 +178,13 @@
             }
             document.getElementById('s-details').innerHTML = dHtml;
 
-            // Kaynak Alanı Güncelleme
+            // Kaynak Alanı Güncellemesi (Link kontrolü hem 'source_link' hem 'q10_link' için yapıldı)
             document.getElementById('s-res-label').innerText = translations[currentLang].res_label;
             let resHtml = `<p class="verification-text">${translations[currentLang].verify_msg}</p>`;
-            if(item.q10_link && item.q10_link.includes('http')) {
-                resHtml += `<a href="${item.q10_link}" target="_blank" class="source-btn">ARŞİVİ GÖR / VIEW ARCHIVE</a>`;
+            
+            let theLink = item.source_link || item.q10_link || "";
+            if(theLink.includes('http')) {
+                resHtml += `<a href="${theLink}" target="_blank" class="source-btn">${translations[currentLang].btn_source}</a>`;
             }
             document.getElementById('s-resources').innerHTML = resHtml;
 
@@ -191,10 +209,16 @@
                         clusterGroup.addLayer(marker);
                     });
                     map.addLayer(clusterGroup);
-                });
+                })
+                .catch(err => console.error("Archive Data Load Error:", err));
 
             changeLang('tr');
-            map.on('click', (e) => { if(e.originalEvent.target.id === 'map') { document.getElementById('sidebar').classList.remove('active'); document.getElementById('manifesto-panel').classList.remove('expanded'); } });
+            map.on('click', (e) => { 
+                if(e.originalEvent.target.id === 'map') { 
+                    document.getElementById('sidebar').classList.remove('active'); 
+                    document.getElementById('manifesto-panel').classList.remove('expanded'); 
+                } 
+            });
         };
     </script>
 </body>
