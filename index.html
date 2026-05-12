@@ -15,7 +15,7 @@
         body { margin: 0; padding: 0; background: #050505; color: #fff; font-family: 'Inter', sans-serif; overflow: hidden; }
         #map { height: 100vh; width: 100vw; background: #000; z-index: 1; }
 
-        /* SOL KONTROLLER */
+        /* KONTROLLER */
         #left-controls { position: fixed; top: 20px; left: 20px; z-index: 9999; display: flex; flex-direction: column; gap: 10px; }
         .control-box { background: rgba(0, 0, 0, 0.95); border: 1px solid #ff0000; border-radius: 4px; padding: 10px; display: flex; flex-direction: column; gap: 10px; box-shadow: 0 0 15px rgba(255, 0, 0, 0.3); }
         .lang-btn { background: none; border: none; color: #666; cursor: pointer; font-weight: 900; font-size: 14px; transition: 0.3s; padding: 5px; outline: none; }
@@ -23,19 +23,26 @@
         .zoom-btn { background: none; border: none; color: #666; cursor: pointer; padding: 5px; transition: 0.3s; }
         .zoom-btn:hover { color: #ff0000; }
 
-        /* MANİFESTO (SOL ALT) */
+        /* MANİFESTO (KÜÇÜK/BÜYÜK MANTIĞI) */
         #manifesto-panel {
-            position: fixed; bottom: 20px; left: 20px; width: 380px;
+            position: fixed; bottom: 20px; left: 20px;
             background: rgba(5, 5, 5, 0.98); border: 2px solid #ff0000;
-            padding: 20px; z-index: 10000; transition: 0.4s;
-            cursor: pointer; box-shadow: 0 0 30px #000; border-radius: 4px;
+            z-index: 10000; transition: 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+            box-shadow: 0 0 30px #000; border-radius: 4px; overflow: hidden;
         }
-        #manifesto-panel.expanded { width: 480px; max-height: 80vh; cursor: default; overflow-y: auto; }
-        .manifesto-quote { color: #fff; font-size: 16px; font-weight: bold; border-left: 4px solid #ff0000; padding-left: 12px; display: block; margin-bottom: 5px; }
-        .manifesto-body { display: none; color: #aaa; font-size: 13.5px; line-height: 1.7; margin-top: 15px; }
-        #manifesto-panel.expanded .manifesto-body { display: block; }
+        .manifesto-collapsed { width: 350px; max-height: 85px; cursor: pointer; padding: 15px 20px; }
+        .manifesto-expanded { width: 480px; max-height: 80vh; overflow-y: auto; cursor: default; padding: 25px; }
+        
+        .m-close-btn { position: absolute; top: 15px; right: 20px; color: #ff0000; cursor: pointer; font-size: 26px; font-weight: bold; transition: 0.3s; }
+        .m-close-btn:hover { color: #fff; transform: scale(1.1); }
+        
+        .manifesto-quote { color: #fff; font-size: 15px; font-weight: bold; border-left: 4px solid #ff0000; padding-left: 12px; display: block; margin-bottom: 5px; }
+        .manifesto-body { color: #ccc; font-size: 13.5px; line-height: 1.7; margin-top: 15px; }
+        
+        .manifesto-collapsed .manifesto-body, .manifesto-collapsed .m-close-btn { display: none; }
+        .manifesto-expanded .manifesto-body, .manifesto-expanded .m-close-btn { display: block; }
 
-        /* SIDEBAR (SAĞ) */
+        /* SIDEBAR */
         #sidebar { 
             position: fixed; top: 0; right: -550px; width: 450px; height: 100%; 
             background: rgba(5, 5, 5, 0.98); border-left: 2px solid #ff0000;
@@ -48,7 +55,6 @@
         #s-image-container { width: 100%; height: 260px; background: #000; border: 1px solid #333; margin-bottom: 20px; display: none; align-items: center; justify-content: center; overflow: hidden; border-radius: 4px; }
         #s-image-container img { width: 100%; height: 100%; object-fit: cover; }
 
-        /* KAYNAK VE DOĞRULAMA */
         .source-container { margin-top: 30px; padding: 18px; background: rgba(255, 0, 0, 0.05); border-radius: 4px; border: 1px solid #333; border-top: 2px solid #ff0000; margin-bottom: 60px; }
         .source-label { color: #ff0000; font-weight: 900; font-size: 11px; text-transform: uppercase; margin-bottom: 10px; display: block; letter-spacing: 1px; }
         .verification-text { color: #bbb; font-size: 12.5px; font-style: italic; line-height: 1.6; }
@@ -57,8 +63,6 @@
 
         .marker-cluster div { background-color: rgba(255, 0, 0, 0.85); color: #fff; font-weight: bold; }
         .marker-cluster { background-color: rgba(255, 0, 0, 0.15); }
-
-        @media (max-width: 768px) { #sidebar { width: 90vw; } #manifesto-panel.expanded { width: 92vw; } }
     </style>
 </head>
 <body>
@@ -75,11 +79,12 @@
         </div>
     </div>
 
-    <div id="manifesto-panel" onclick="this.classList.toggle('expanded')">
+    <div id="manifesto-panel" class="manifesto-collapsed" onclick="if(this.classList.contains('manifesto-collapsed')) { this.classList.remove('manifesto-collapsed'); this.classList.add('manifesto-expanded'); }">
+        <span class="m-close-btn" onclick="event.stopPropagation(); document.getElementById('manifesto-panel').classList.remove('manifesto-expanded'); document.getElementById('manifesto-panel').classList.add('manifesto-collapsed');">&times;</span>
         <span id="m-quote" class="manifesto-quote"></span>
         <span id="m-sub" style="color:#666; font-size:13px; padding-left:16px;"></span>
         <div class="manifesto-body" id="m-text"></div>
-        <div style="margin-top:20px; color:#ff0000; font-size:11px; font-weight:900; border-top: 1px solid #222; padding-top:15px;">TIMOR NIYAZI & ALFRED BÖHLER</div>
+        <div class="manifesto-body" style="margin-top:20px; color:#ff0000; font-size:11px; font-weight:900; border-top: 1px solid #222; padding-top:15px;">TIMOR NIYAZI & ALFRED BÖHLER</div>
     </div>
 
     <div id="map"></div>
@@ -104,38 +109,49 @@
     <script>
         let map, clusterGroup, currentLang = 'tr', lastSelectedData = null;
 
-        // SABİT ÇEVİRİLER (UKRAYNA GİBİ ŞEYLER TEMİZLENDİ)
+        // SABİT ÇEVİRİLER
         const translations = {
             tr: {
                 quote: `"Yurtta Sulh, Cihanda Sulh."`,
                 sub: `— Mustafa Kemal Atatürk`,
-                text: `Bizler, <strong>Timor Niyazi</strong> ve <strong>Alfred Böhler</strong>, insanlığın en karanlık döngüsüne tanıklık ediyoruz. İkinci Dünya Savaşı'ndan sonra dünyanın ders aldığı yanılgısı, tarihin en büyük trajedisidir. Medya ölen insanların haberlerine 3 dakikadan fazla zaman ayırmıyor. Bu yüzden bu arşivi kurduk. 1945'ten 2026'ya kadar olan tüm savaşlar ve gerçekleri bu haritadadır.`,
+                text: `Bizler, <strong>Timor Niyazi</strong> ve <strong>Alfred Böhler</strong>, insanlığın en karanlık döngüsüne tanıklık ediyoruz. İkinci Dünya Savaşı'nda katledilen milyonlardan sonra dünyanın ders aldığı illüzyonu, tarihin en trajik yanılgısıdır. Bugün medya, ölen insanların haberlerine 3 dakikadan fazla zaman ayırmıyor. Bu arşiv, 1945'ten 2026'ya kadar olan savaşların unutturulmak istenen gerçeklerini ortaya koymak için kurulmuştur.`,
                 res_label: "DOĞRULAMA VE KAYNAKÇA:",
-                verify_msg: "Bu vaka; Cenevre Sözleşmesi Arşivleri (ICRC) ve BM raporları tarafından doğrulanmıştır.",
-                btn_source: "ARŞİVİ GÖR",
-                fallback_note: "(Seçili dilde çeviri henüz eklenmemiştir, orijinal veri gösteriliyor.)"
+                verify_msg: "Bu vaka; Cenevre Sözleşmesi Arşivleri ve BM raporlarıyla doğrulanmıştır.",
+                btn_source: "ARŞİVİ GÖR"
             },
             en: {
                 quote: `"Peace at Home, Peace in the World."`,
                 sub: `— Mustafa Kemal Atatürk`,
-                text: `We, <strong>Timor Niyazi</strong> and <strong>Alfred Böhler</strong>, bear witness to humanity's darkest loop. The illusion that the world learned its lesson after WWII is history's greatest tragedy. Today's media dedicates no more than 3 minutes to news of the dying. We built this archive to reveal the truth of all wars from 1945 to 2026.`,
+                text: `We, <strong>Timor Niyazi</strong> and <strong>Alfred Böhler</strong>, bear witness to humanity's darkest loop. The illusion that the world learned its lesson after WWII is history's greatest fallacy. Today, the media dedicates no more than 3 minutes to the dead. This archive was built to expose the forgotten realities of all wars from 1945 to 2026.`,
                 res_label: "VERIFICATION & BIBLIOGRAPHY:",
-                verify_msg: "This case has been verified via Geneva Convention Archives (ICRC) and UN Human Rights reports.",
-                btn_source: "VIEW ARCHIVE",
-                fallback_note: "(Translation not available, showing available data.)"
+                verify_msg: "This case has been verified via Geneva Convention Archives and UN Human Rights reports.",
+                btn_source: "VIEW ARCHIVE"
             },
             de: {
                 quote: `"Friede in der Heimat, Friede in der Welt."`,
                 sub: `— Mustafa Kemal Atatürk`,
-                text: `Wir, <strong>Timor Niyazi</strong> und <strong>Alfred Böhler</strong>, bezeugen den dunkelsten Kreislauf der Menschheit. Die Illusion, die Welt habe nach dem Zweiten Weltkrieg gelernt, ist der größte Irrtum der Geschichte. Medien widmen den Toten kaum Zeit. Wir haben dieses Archiv geschaffen, um die Wahrheit aller Kriege von 1945 bis 2026 zu zeigen.`,
+                text: `Wir, <strong>Timor Niyazi</strong> und <strong>Alfred Böhler</strong>, bezeugen den dunkelsten Kreislauf der Menschheit. Die Illusion, die Welt habe nach dem Zweiten Weltkrieg gelernt, ist der größte Irrtum der Geschichte. Medien widmen den Toten heute kaum 3 Minuten. Dieses Archiv wurde geschaffen, um die Realität aller Kriege von 1945 bis 2026 zu zeigen.`,
                 res_label: "VERIFIZIERUNG & BIBLIOGRAPHIE:",
                 verify_msg: "Dieser Fall wurde durch das IKRK (Genfer Konvention) und UN-Berichte verifiziert.",
-                btn_source: "ARCHIV ANSEHEN",
-                fallback_note: "(Übersetzung noch nicht verfügbar, Originaldaten werden angezeigt.)"
+                btn_source: "ARCHIV ANSEHEN"
             }
         };
 
-        function changeLang(lang) {
+        // GOOGLE TRANSLATE MOTORU (API)
+        async function translateText(text, targetLang) {
+            if (!text || targetLang === 'tr') return text;
+            try {
+                const url = `https://translate.googleapis.com/translate_a/single?client=gtx&sl=auto&tl=${targetLang}&dt=t&q=${encodeURIComponent(text)}`;
+                const response = await fetch(url);
+                const data = await response.json();
+                return data[0].map(item => item[0]).join('');
+            } catch (e) {
+                console.error("Çeviri Motoru Hatası:", e);
+                return text; 
+            }
+        }
+
+        async function changeLang(lang) {
             currentLang = lang;
             document.querySelectorAll('.lang-btn').forEach(b => b.classList.remove('active'));
             document.getElementById('btn-' + lang).classList.add('active');
@@ -144,57 +160,68 @@
             document.getElementById('m-sub').innerText = translations[lang].sub;
             document.getElementById('m-text').innerHTML = translations[lang].text;
             
-            if(lastSelectedData) updateSidebar(lastSelectedData);
+            if(lastSelectedData) {
+                await updateSidebar(lastSelectedData);
+            }
         }
 
-        function updateSidebar(item) {
+        async function updateSidebar(item) {
             lastSelectedData = item;
+            document.getElementById('sidebar').classList.add('active');
             
-            // Başlık Çeviri Önceliği: Seçili Dil > İngilizce > Türkçe
-            const safeName = (item.name && item.name[currentLang]) ? item.name[currentLang] : 
-                             (item.name && item.name['en']) ? item.name['en'] : 
-                             (item.name && item.name['tr']) ? item.name['tr'] : "Archive";
+            const detailsContainer = document.getElementById('s-details');
             
-            document.getElementById('s-title').innerText = safeName;
-            document.getElementById('s-date').innerText = "YEAR: " + (item.start || "N/A");
-            
+            // Görsel Kontrolü
             const imgBox = document.getElementById('s-image-container');
             if (item.q10_img) {
                 imgBox.style.display = 'flex';
                 document.getElementById('s-image').src = item.q10_img;
             } else { imgBox.style.display = 'none'; }
-            
-            // AKILLI DİL YÖNETİMİ (Kırmızı Kutu Kalktı, Yedek Veri Geldi)
-            let dHtml = "";
-            const prediction = (item.ai_prediction && item.ai_prediction[currentLang]) ? item.ai_prediction[currentLang] : 
-                               (item.ai_prediction && item.ai_prediction['en']) ? item.ai_prediction['en'] : "";
-            
-            if (prediction !== "") {
-                dHtml += `<div style="background:rgba(255,0,0,0.15); padding:15px; border-left:4px solid #ff0000; margin-bottom:20px; font-size:12.5px; color:#ffcccc; font-style:italic;"><strong>PROJECTION:</strong> ${prediction}</div>`;
-            }
 
-            // Veri varsa o dili al, yoksa sırasıyla EN ve TR'ye bak
-            let details = (item.details && item.details[currentLang]) ? item.details[currentLang] : 
-                          (item.details && item.details['en']) ? item.details['en'] : 
-                          (item.details && item.details['tr']) ? item.details['tr'] : null;
+            // JSON'da o dil var mı?
+            let details = item.details[currentLang];
 
-            if (!details) {
-                dHtml += `<div style="color:#ff0000; font-size:12px; margin-bottom:15px;">No detailed data available.</div>`;
+            if (details) {
+                // VERİ VARSA DİREKT YÜKLE (HIZLI)
+                document.getElementById('s-title').innerText = item.name[currentLang] || item.name['tr'];
+                document.getElementById('s-date').innerText = "YEAR: " + (item.start || "N/A");
+                renderDetailsHTML(detailsContainer, details, false, item.ai_prediction);
             } else {
-                // Eğer seçilen dilden farklı bir dil gösteriliyorsa ufak bir not ekle (isteğe bağlı)
-                if (!item.details[currentLang]) {
-                    dHtml += `<div style="color:#666; font-size:11px; margin-bottom:10px; font-style:italic;">${translations[currentLang].fallback_note}</div>`;
-                }
+                // VERİ YOKSA CANLI ÇEVİRİ MOTORUNU ÇALIŞTIR
+                const fallbackData = item.details['tr'] || item.details['en'];
+                
+                // Yükleniyor Ekranı (Sunumda Çok Havalı Durur)
+                detailsContainer.innerHTML = `
+                    <div style="text-align:center; padding: 50px 20px; color:#ff0000;">
+                        <i class="fas fa-satellite-dish fa-spin fa-3x" style="margin-bottom:15px;"></i><br>
+                        <span style="font-weight:900; letter-spacing:2px; font-size:14px;">CANLI ÇEVİRİ MOTORU AKTİF</span><br>
+                        <span style="font-size:12px; color:#aaa; margin-top:5px; display:block;">Yapay zeka veritabanı taranıyor...</span>
+                    </div>
+                `;
+
+                // Başlık Çevirisi
+                let baseTitle = item.name['tr'] || item.name['en'] || "Arşiv Kaydı";
+                document.getElementById('s-title').innerText = await translateText(baseTitle, currentLang);
+                document.getElementById('s-date').innerText = "YEAR: " + (item.start || "N/A");
+
+                // Maddeleri Eşzamanlı (Çok Hızlı) Çevir
+                let translatedDetails = {};
+                let promises = [];
 
                 for (let i = 1; i <= 10; i++) {
-                    if(details[`q${i}_title`]) {
-                        dHtml += `<div style="margin-bottom:18px;"><strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; display:block; padding-bottom:3px;">${details[`q${i}_title`]}</strong><p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${details[`q${i}_text`]}</p></div>`;
+                    if (fallbackData[`q${i}_title`]) {
+                        promises.push( translateText(fallbackData[`q${i}_title`], currentLang).then(res => translatedDetails[`q${i}_title`] = res) );
+                    }
+                    if (fallbackData[`q${i}_text`]) {
+                        promises.push( translateText(fallbackData[`q${i}_text`], currentLang).then(res => translatedDetails[`q${i}_text`] = res) );
                     }
                 }
-            }
-            document.getElementById('s-details').innerHTML = dHtml;
 
-            // Kaynak Butonu
+                await Promise.all(promises); // Tüm çevirilerin bitmesini bekle
+                renderDetailsHTML(detailsContainer, translatedDetails, true, item.ai_prediction);
+            }
+
+            // Kaynaklar
             document.getElementById('s-res-label').innerText = translations[currentLang].res_label;
             let resHtml = `<p class="verification-text">${translations[currentLang].verify_msg}</p>`;
             let targetLink = item.source_link || item.q10_link || "";
@@ -202,8 +229,34 @@
                 resHtml += `<a href="${targetLink}" target="_blank" class="source-btn">${translations[currentLang].btn_source}</a>`;
             }
             document.getElementById('s-resources').innerHTML = resHtml;
+        }
 
-            document.getElementById('sidebar').classList.add('active');
+        async function renderDetailsHTML(container, details, isTranslated, aiPrediction) {
+            let dHtml = "";
+            
+            // Eğer çeviri motoru kullanıldıysa bilgi notu
+            if (isTranslated) {
+                 dHtml += `<div style="background:rgba(255,0,0,0.15); padding:12px; border-left:3px solid #ff0000; margin-bottom:20px; font-size:11.5px; color:#fff; font-style:italic;">
+                    <i class="fas fa-robot"></i> Google Translate Canlı Çeviri Motoru ile anlık çevrilmiştir.
+                 </div>`;
+            }
+
+            // AI Projeksiyonu
+            let predictionText = (aiPrediction && aiPrediction['tr']) ? aiPrediction['tr'] : "";
+            if (predictionText !== "") {
+                if(currentLang !== 'tr') predictionText = await translateText(predictionText, currentLang);
+                dHtml += `<div style="background:rgba(255,0,0,0.15); padding:15px; border-left:4px solid #ff0000; margin-bottom:20px; font-size:12.5px; color:#ffcccc; font-style:italic;"><strong>PROJECTION:</strong> ${predictionText}</div>`;
+            }
+
+            for (let i = 1; i <= 10; i++) {
+                if(details[`q${i}_title`]) {
+                    dHtml += `<div style="margin-bottom:18px;">
+                                <strong style="color:#fff; font-size:13.5px; text-transform:uppercase; border-bottom:1px solid #333; display:block; padding-bottom:3px;">${details[`q${i}_title`]}</strong>
+                                <p style="color:#bbb; font-size:13px; margin-top:6px; line-height:1.6;">${details[`q${i}_text`]}</p>
+                              </div>`;
+                }
+            }
+            container.innerHTML = dHtml;
         }
 
         window.onload = function() {
@@ -211,7 +264,9 @@
             L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png').addTo(map);
             clusterGroup = L.markerClusterGroup({ spiderfyOnMaxZoom: true, maxClusterRadius: 40 });
 
-            fetch('archive_data.json')
+            // ÖNBELLEK KIRICI: Sonuna saat/saniye ekler, böylece GitHub'ı hep en yeni dosyayı vermeye zorlar!
+            const cacheBuster = new Date().getTime();
+            fetch('archive_data.json?v=' + cacheBuster)
                 .then(res => res.json())
                 .then(data => {
                     data.forEach(item => {
